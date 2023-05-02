@@ -4,6 +4,21 @@ const outageDays = document.getElementById('outageDays');
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+let lastSelectedDay = null;
+let shiftKeyPressed = false;
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Shift') {
+    shiftKeyPressed = true;
+  }
+});
+
+document.addEventListener('keyup', (event) => {
+  if (event.key === 'Shift') {
+    shiftKeyPressed = false;
+  }
+});
+
 function generateCalendar() {
   for (let month = 0; month < 12; month++) {
     const monthElement = document.createElement('div');
@@ -30,7 +45,14 @@ function generateCalendar() {
         dayElement.dataset.date = `2023-${month + 1}-${dayNumber}`;
         
         dayElement.addEventListener('click', () => {
-          dayElement.classList.toggle('outage');
+          if (shiftKeyPressed && lastSelectedDay) {
+            selectRange(lastSelectedDay, dayElement);
+          } else {
+            dayElement.classList.toggle('outage');
+          }
+          if (!shiftKeyPressed) {
+            lastSelectedDay = dayElement;
+          }
           updateDaysCount();
           saveState();
         });
@@ -70,6 +92,29 @@ function loadState() {
   });
 
   updateDaysCount();
+}
+
+function selectRange(start, end) {
+  const allDays = Array.from(document.querySelectorAll('.day[data-date]'));
+  const startIndex = allDays.indexOf(start);
+  const endIndex = allDays.indexOf(end);
+
+  if (startIndex < 0 || endIndex < 0) {
+    return;
+  }
+
+  const rangeStart = Math.min(startIndex, endIndex);
+  const rangeEnd = Math.max(startIndex, endIndex);
+  const firstDayIsOutage = start.classList.contains('outage');
+
+  for (let i = rangeStart; i <= rangeEnd; i++) {
+    const dayElement = allDays[i];
+    if (firstDayIsOutage) {
+      dayElement.classList.remove('outage');
+    } else {
+      dayElement.classList.add('outage');
+    }
+  }
 }
 
 generateCalendar();
