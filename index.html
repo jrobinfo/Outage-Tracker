@@ -3,16 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Operational Outage Calendar</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Operational Outage Tracker</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    th {
+      background-color: #f1c40f;
+      color: white;
+    }
+
+    .day {
+      cursor: pointer;
+      background-color: #2ecc71;
+    }
+
+    .day.outage {
+      background-color: #e74c3c;
+    }
+  </style>
 </head>
 <body>
-  <h1>Operational Outage Calendar 2023</h1>
-  <div id="calendar"></div>
-  <div>
-    <p>Operational Days: <span id="operationalDays">0</span></p>
-    <p>Outage Days: <span id="outageDays">0</span></p>
+  <h1>Operational Outage Tracker</h1>
+
+  <div id="login-form">
+    <label for="email">Email: </label>
+    <input type="email" id="email" />
+    <label for="password">Password: </label>
+    <input type="password" id="password" />
+    <button id="login">Login</button>
+    <button id="signup">Sign Up</button>
   </div>
-  <script src="scripts.js"></script>
+  <button id="logout" style="display:none;">Logout</button>
+
+  <h2>Add Outage</h2>
+  <label for="start">Start: </label>
+  <input type="datetime-local" id="start" />
+  <label for="end">End: </label>
+  <input type="datetime-local" id="end" />
+  <button id="add-outage">Add Outage</button>
+
+  <h2>Outage Data</h2>
+  <div id="outage-data"></div>
+
+  <h2>Calendar</h2>
+  <div id="calendar"></div>
+
+  <script type="module" src="scripts.js"></script>
 </body>
 </html>
